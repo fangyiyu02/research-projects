@@ -1,0 +1,15 @@
+# DEPS.yml - Cache Verification Project
+# AI-Optimized Cache for matmul_32 Workload
+
+# DUT only (cache module)
+cache_dut:
+  deps:
+    - cache_matmul_32.sv
+  top: cache_memory
+
+# Complete testbench simulation
+cache_tb:
+  deps:
+    - cache_matmul_32.sv
+    - tb_cache_matmul_32.sv
+  top: tb_cache_memory

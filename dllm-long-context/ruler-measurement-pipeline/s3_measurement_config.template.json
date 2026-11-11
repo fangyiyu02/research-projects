@@ -1,0 +1,254 @@
+{
+  "schema_version": 2,
+  "protocol_version": "2.0-draft",
+  "status": "draft_pending_method_and_environment_freeze",
+  "experiment_id": "ultrallada_s3_chunked_efficiency_v2",
+  "randomization_seed": 2026081501,
+  "model": {
+    "id": "relaxe-system-lab/UltraLLaDA",
+    "revision": "a02bb0490ddbe810bc3ac0deb667ed8fac2e8d47",
+    "code_revision": "a02bb0490ddbe810bc3ac0deb667ed8fac2e8d47",
+    "dtype": "bfloat16",
+    "batch_size": 1,
+    "eval_mode": true,
+    "inference_mode": true
+  },
+  "shared_runtime": {
+    "id": "shared_chunked_bf16_flash_v1",
+    "required_for_all_methods": true,
+    "attention": {
+      "api": "torch_sdpa",
+      "allowed_backends": [
+        "FLASH_ATTENTION"
+      ],
+      "fail_on_fallback": true,
+      "verify_with_real_model_forward": true,
+      "verify_with_profiler_events": true
+    },
+    "ffn": {
+      "chunked": true,
+      "chunk_dimension": "sequence",
+      "chunk_size_tokens": 8192,
+      "pad_last_chunk": false,
+      "preserve_token_order": true
+    },
+    "lm_head": {
+      "scope": "sampler_required_positions",
+      "select_hidden_before_projection": true,
+      "chunked": true,
+      "chunk_size_tokens": 512,
+      "streaming_consume": true,
+      "concatenate_logit_chunks": false,
+      "materialize_prompt_vocabulary_logits": false,
+      "record_projected_tokens": true,
+      "record_chunk_calls": true
+    },
+    "placement": {
+      "mode": "single_gpu",
+      "physical_gpu_index": 0,
+      "cuda_visible_devices": "0",
+      "expected_logical_gpu_index": 0,
+      "device_map": "cuda:0",
+      "allow_cpu_offload": false,
+      "allow_multi_gpu": false,
+      "allow_automatic_device_map": false
+    }
+  },
+  "prompt_bank": {
+    "root": "prompts/ruler_v1/efficiency/niah_single_1",
+    "task": "niah_single_1",
+    "candidate_prompt_lengths": [
+      1024,
+      2048,
+      4096,
+      6144,
+      8192,
+      12288,
+      16384,
+      24576,
+      32768,
+      49152,
+      65536,
+      98304,
+      131072
+    ],
+    "samples_per_length": 10,
+    "load_frozen_token_ids": true,
+    "runtime_tokenization_forbidden": true,
+    "tokenizer_compatibility_required": true,
+    "context_limit_policy": "prompt_plus_generation_must_not_exceed_verified_model_limit",
+    "verified_model_total_token_limit": null,
+    "final_prompt_lengths": null,
+    "max_length_condition_id": null
+  },
+  "generation": {
+    "gen_length": 128,
+    "block_length": 32,
+    "steps_semantics": "total_generation_steps",
+    "steps_total": 128,
+    "num_blocks": 4,
+    "steps_per_block": 32,
+    "temperature": 0.0,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "mask_id": 126336,
+    "deterministic_decoding": true,
+    "record_actual_model_forward_calls": true,
+    "expected_no_cache_model_forward_calls": 128,
+    "reject_if_steps_interpreted_per_block": true
+  },
+  "method_registry": {
+    "expected_method_count": 3,
+    "shared_runtime_required": "shared_chunked_bf16_flash_v1",
+    "methods": [
+      {
+        "id": "chunked_no_cache",
+        "role": "baseline",
+        "cache_enabled": false,
+        "algorithm": "full_recomputation_no_cross_step_cache",
+        "status": "defined"
+      },
+      {
+        "id": "chunked_cache_method_a",
+        "role": "cache_method",
+        "cache_enabled": true,
+        "algorithm": null,
+        "source_revision": null,
+        "parameters": null,
+        "status": "pending_freeze"
+      },
+      {
+        "id": "chunked_cache_method_b",
+        "role": "cache_method",
+        "cache_enabled": true,
+        "algorithm": null,
+        "source_revision": null,
+        "parameters": null,
+        "status": "pending_freeze"
+      }
+    ]
+  },
+  "replication": {
+    "warmup_repetitions_per_cell": 3,
+    "measured_repetitions_per_prompt": 5,
+    "repeat_layout": "five_rounds_each_prompt_once_per_round",
+    "method_order": "seeded_balanced_six_permutations_for_three_methods",
+    "length_order": "seeded_permutation",
+    "fresh_process_per_cell": true,
+    "terminate_process_after_oom": true,
+    "latency_summary": "median_of_prompt_medians",
+    "memory_capacity_summary": "maximum_observed_peak"
+  },
+  "latency": {
+    "primary_metric": "generation_e2e_wall_ms",
+    "clock": "time.perf_counter_ns",
+    "run_full_generation": true,
+    "allow_per_forward_times_count_as_primary": false,
+    "record_cuda_event_device_0": true,
+    "record_cpu_scheduling_gap": true,
+    "include_chunk_loops": true,
+    "include_cache_management": true,
+    "include_logits_to_token_sampling": true,
+    "exclude_tokenization": true,
+    "exclude_file_io": true,
+    "exclude_model_load": true,
+    "exclude_initial_input_h2d": true,
+    "stop_after_device_synchronize": true,
+    "empty_cache_between_measured_repeats": false,
+    "record_ffn_chunk_calls": true,
+    "record_lm_head_chunk_calls": true,
+    "record_lm_head_projected_tokens": true,
+    "record_model_forward_calls": true,
+    "record_method_cache_metrics": true
+  },
+  "memory": {
+    "separate_pass_from_latency": true,
+    "empty_cache_before_each_measured_run": true,
+    "reset_peak_stats_before_each_measured_run": true,
+    "reset_peak_stats_at_chunk_boundaries": false,
+    "nvml_poll_interval_ms": 20,
+    "record_model_load_peak": true,
+    "record_torch_allocated": true,
+    "record_torch_reserved": true,
+    "record_nvml_process_used": true,
+    "record_nvml_device_used": true,
+    "primary_fit_metric": "max_model_load_and_inference_nvml_process_peak",
+    "safe_headroom_rule": "max(2_GiB, 0.05 * device_capacity)",
+    "fit_status_values": [
+      "safe-fit",
+      "fragile-fit",
+      "oom",
+      "context-limit",
+      "backend-invalid",
+      "invalid"
+    ]
+  },
+  "chunking_validation": {
+    "required": true,
+    "reference_condition": "matched_no_ffn_chunk_reference",
+    "test_condition": "chunked_no_cache",
+    "reference_differs_only_by": "ffn_chunking_disabled",
+    "anchor_lengths": [
+      4096,
+      16384,
+      "largest_unchunked_safe"
+    ],
+    "paired_repetitions": 5,
+    "require_exact_final_output_token_ids": true,
+    "require_exact_stepwise_accept_and_remask_positions": true,
+    "require_equal_model_forward_calls": true,
+    "forbid_full_sequence_vocabulary_logits_in_matched_pair": true,
+    "official_full_logits_sanity_check_length": 4096,
+    "official_full_logits_sanity_check_used_for_latency_attribution": false,
+    "report_latency_overhead": true,
+    "allow_extrapolated_unchunked_128k": false
+  },
+  "instrumentation_overhead_pilot": {
+    "enabled": true,
+    "anchor_lengths": [
+      4096,
+      32768,
+      "largest_native_safe"
+    ],
+    "paired_repetitions": 5,
+    "order": "alternating_AB_BA",
+    "threshold_relative": 0.01,
+    "threshold_absolute_ms": 10.0
+  },
+  "fairness_constraints": {
+    "same_prompt_ids": true,
+    "same_model_weights": true,
+    "same_generation_config": true,
+    "same_attention_backend": true,
+    "same_dtype": true,
+    "same_ffn_chunk_policy": true,
+    "same_lm_head_scope_and_chunk_policy": true,
+    "same_device": true,
+    "same_timing_boundaries": true,
+    "same_memory_instrumentation": true,
+    "baseline_for_speedup": "chunked_no_cache",
+    "baseline_for_memory_saving": "chunked_no_cache"
+  },
+  "hardware_to_freeze": {
+    "physical_gpu_index": 0,
+    "gpu_name": null,
+    "gpu_uuid": null,
+    "gpu_total_memory_bytes": null,
+    "driver_version": null,
+    "cuda_version": null,
+    "power_limit_watts": null,
+    "application_clocks": null,
+    "foreign_process_policy": "no_other_compute_processes",
+    "cpu": null,
+    "ram_bytes": null,
+    "os": null
+  },
+  "software_to_freeze": {
+    "python_version": null,
+    "torch_version": null,
+    "transformers_version": null,
+    "accelerate_version": null,
+    "allocator_backend": null,
+    "sdpa_profiler_event_names": null
+  }
+}

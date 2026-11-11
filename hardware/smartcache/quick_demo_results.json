@@ -1,0 +1,168 @@
+{
+  "baselines": {
+    "small_direct": {
+      "matmul_32": 0.18870811855670103,
+      "sort_1k": 0.010869565217391304,
+      "sequential": 0.125,
+      "stride_8": 1.0
+    },
+    "balanced": {
+      "matmul_32": 0.0019329896907216496,
+      "sort_1k": 0.005478260869565217,
+      "sequential": 0.0625,
+      "stride_8": 0.5
+    },
+    "large_assoc": {
+      "matmul_32": 0.0019329896907216496,
+      "sort_1k": 0.005478260869565217,
+      "sequential": 0.0625,
+      "stride_8": 0.5
+    },
+    "max_capacity": {
+      "matmul_32": 0.0009664948453608248,
+      "sort_1k": 0.002782608695652174,
+      "sequential": 0.0315,
+      "stride_8": 0.252
+    }
+  },
+  "optimized": {
+    "matmul_32": {
+      "best_config": {
+        "cache_size": 32768,
+        "block_size": 512,
+        "associativity": 16,
+        "miss_rate": 0.0002416237113402062
+      },
+      "best_miss_rate": 0.0002416237113402062,
+      "optimization_time": 1.4263687133789062,
+      "pareto_frontier": [
+        {
+          "cache_size": 1024,
+          "block_size": 128,
+          "associativity": 4,
+          "miss_rate": 0.33054123711340205
+        },
+        {
+          "cache_size": 8192,
+          "block_size": 64,
+          "associativity": 2,
+          "miss_rate": 0.02830017719072165
+        },
+        {
+          "cache_size": 8192,
+          "block_size": 512,
+          "associativity": 16,
+          "miss_rate": 0.0002416237113402062
+        }
+      ]
+    },
+    "sort_1k": {
+      "best_config": {
+        "cache_size": 32768,
+        "block_size": 512,
+        "associativity": 16,
+        "miss_rate": 0.0006956521739130435
+      },
+      "best_miss_rate": 0.0006956521739130435,
+      "optimization_time": 0.8444709777832031,
+      "pareto_frontier": [
+        {
+          "cache_size": 1024,
+          "block_size": 128,
+          "associativity": 4,
+          "miss_rate": 0.009565217391304347
+        },
+        {
+          "cache_size": 1024,
+          "block_size": 512,
+          "associativity": 2,
+          "miss_rate": 0.002956521739130435
+        },
+        {
+          "cache_size": 2048,
+          "block_size": 512,
+          "associativity": 4,
+          "miss_rate": 0.0016521739130434783
+        },
+        {
+          "cache_size": 4096,
+          "block_size": 256,
+          "associativity": 1,
+          "miss_rate": 0.001391304347826087
+        },
+        {
+          "cache_size": 8192,
+          "block_size": 512,
+          "associativity": 1,
+          "miss_rate": 0.0006956521739130435
+        }
+      ]
+    },
+    "sequential": {
+      "best_config": {
+        "cache_size": 1024,
+        "block_size": 512,
+        "associativity": 2,
+        "miss_rate": 0.008
+      },
+      "best_miss_rate": 0.008,
+      "optimization_time": 0.5883727073669434,
+      "pareto_frontier": [
+        {
+          "cache_size": 1024,
+          "block_size": 128,
+          "associativity": 4,
+          "miss_rate": 0.0315
+        },
+        {
+          "cache_size": 1024,
+          "block_size": 512,
+          "associativity": 2,
+          "miss_rate": 0.008
+        }
+      ]
+    },
+    "stride_8": {
+      "best_config": {
+        "cache_size": 1024,
+        "block_size": 512,
+        "associativity": 2,
+        "miss_rate": 0.064
+      },
+      "best_miss_rate": 0.064,
+      "optimization_time": 0.583031177520752,
+      "pareto_frontier": [
+        {
+          "cache_size": 1024,
+          "block_size": 128,
+          "associativity": 4,
+          "miss_rate": 0.252
+        },
+        {
+          "cache_size": 1024,
+          "block_size": 512,
+          "associativity": 2,
+          "miss_rate": 0.064
+        }
+      ]
+    }
+  },
+  "workload_stats": {
+    "matmul_32": {
+      "num_accesses": 99328,
+      "unique_addresses": 3072
+    },
+    "sort_1k": {
+      "num_accesses": 11500,
+      "unique_addresses": 1000
+    },
+    "sequential": {
+      "num_accesses": 2000,
+      "unique_addresses": 2000
+    },
+    "stride_8": {
+      "num_accesses": 250,
+      "unique_addresses": 250
+    }
+  }
+}

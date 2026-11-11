@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "condition_id": "dllm_cache_v1",
+  "status": "not_implemented",
+  "algorithm": "dllm_cache",
+  "implementation_notes": "Replace this text with the exact implemented cache policy and cite the implementation/paper version.",
+  "parameters": {
+    "cache_policy": null,
+    "refresh_interval": null,
+    "threshold": null
+  }
+}
+

@@ -1,0 +1,66 @@
+MODEL USER MESSAGE
+
+Read the store notes and retrieve the requested price.
+
+Store notes:
+A notice board hangs beside the main entrance.
+The store opens after sunrise and closes before sunset.
+The floor is swept at the end of the day.
+The signs on the shelves are checked regularly.
+The store opens after sunrise and closes before sunset.
+The front door has a handle made of metal.
+Visitors leave their umbrellas near the entrance.
+The delivery boxes are stored near the back door.
+A small desk stands next to the storage room.
+Staff members check the inventory during quiet hours.
+The windows allow natural light into the room.
+The delivery boxes are stored near the back door.
+Customers can request a paper receipt at the counter.
+Visitors leave their umbrellas near the entrance.
+A clock hangs above the service counter.
+The front door has a handle made of metal.
+Empty cartons are folded and placed in the recycling bin.
+A small desk stands next to the storage room.
+A notice board hangs beside the main entrance.
+The price of item Olive is $9.
+The price of item Elm is $8.
+The shelves are arranged in neat rows along the wall.
+Customers can request a paper receipt at the counter.
+The price of item Hazel is $2.
+A small desk stands next to the storage room.
+The floor is swept at the end of the day.
+The front door has a handle made of metal.
+The floor is swept at the end of the day.
+Visitors leave their umbrellas near the entrance.
+A clock hangs above the service counter.
+Customers can request a paper receipt at the counter.
+The delivery boxes are stored near the back door.
+The delivery boxes are stored near the back door.
+The price of item Spruce is $6.
+The clerk keeps a notebook beside the register.
+A small desk stands next to the storage room.
+Staff members check the inventory during quiet hours.
+The windows allow natural light into the room.
+The front door has a handle made of metal.
+A small desk stands next to the storage room.
+A notice board hangs beside the main entrance.
+A notice board hangs beside the main entrance.
+
+What is the price of item Elm?
+Reply with only the single digit. Do not include a dollar sign, words, or punctuation.
+
+--- METADATA BELOW IS NOT PART OF THE MODEL INPUT ---
+{
+  "id": "pilot_000",
+  "answer": "8",
+  "evidence_text": "The price of item Elm is $8.",
+  "position_group": "middle",
+  "critical_token_positions": [
+    240
+  ],
+  "control_token_positions": [
+    381
+  ],
+  "answer_position": 503,
+  "input_token_count": 504
+}

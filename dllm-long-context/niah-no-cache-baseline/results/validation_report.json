@@ -1,0 +1,22 @@
+{
+  "condition": "no_cache",
+  "condition_lock_sha256": null,
+  "contains_expected_number_accuracy": 0.8892045454545454,
+  "error_count": 0,
+  "errors": [],
+  "expected_prompt_count": 1760,
+  "experiment_id": "llada8b_fresh_niah_v1",
+  "experiment_lock_sha256": "fddd865f75da021fe0dbf5a3ba1b9917da0b1c8e78cef87da901671cb60e6b1f",
+  "median_latency_seconds": 26.90913949161768,
+  "median_peak_memory_allocated_bytes": 19373041920.0,
+  "missing_count": 0,
+  "observed_cell_count": 176,
+  "result_count": 1760,
+  "results_path": "/root/LLaDA_Project/experiment/runs/no_cache/results.jsonl",
+  "results_sha256": "699c162c1edcdef7996650cce5fc639d48c277f62c61966eade9ac27df6d127e",
+  "schema_version": 1,
+  "session_count": 1,
+  "status": "valid",
+  "valid_result_count": 1760,
+  "validated_at_utc": "2026-07-16T16:27:41.169846+00:00"
+}

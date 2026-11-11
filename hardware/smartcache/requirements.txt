@@ -1,0 +1,28 @@
+# SmartCache: AI-Driven Cache Optimization Framework
+# Python Dependencies
+
+# Core numerical computing
+numpy>=1.19.0
+
+# Scientific computing and optimization
+scipy>=1.5.0
+
+# Bayesian optimization
+scikit-optimize>=0.9.0
+
+# Visualization
+matplotlib>=3.3.0
+seaborn>=0.11.0
+
+# Optional: Enhanced progress bars
+# tqdm>=4.50.0
+
+# Optional: Jupyter notebook support
+# jupyter>=1.0.0
+# ipython>=7.16.0
+
+# Installation:
+# pip install -r requirements.txt
+#
+# Or install individually:
+# pip install numpy scipy scikit-optimize matplotlib seaborn

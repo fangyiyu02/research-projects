@@ -1,0 +1,76 @@
+diff --git a/dflash/model.py b/dflash/model.py
+index 7821d66..59b51f9 100644
+--- a/dflash/model.py
++++ b/dflash/model.py
+@@ -17,6 +17,8 @@ from transformers.models.qwen3.modeling_qwen3 import (
+     Qwen3RotaryEmbedding,
+     rotate_half,
+ )
++import os
++PROFILE = os.environ.get("DFLASH_PROFILE")
+ 
+ # ---------------------------------------------------------------------------
+ # Model utilities
+@@ -222,6 +224,9 @@ def dflash_generate(
+ 
+     decode_start = _cuda_time() if return_stats else None
+     acceptance_lengths = []
++    #####################################################
++    draft_times, verify_times, round_records = [], [], []
++    #####################################################
+     start = num_input_tokens
+     stop_tokens = (
+         torch.tensor(stop_token_ids, dtype=output_ids.dtype, device=output_ids.device)
+@@ -240,6 +245,9 @@ def dflash_generate(
+                 block_output_ids,
+                 float(_draft_value(model.config, "input_embedding_scale", 1.0)),
+             )
++            ######################################################################
++            t0 = _cuda_time() if PROFILE else 0
++            ######################################################################
+             draft_hidden = model(
+                 target_hidden=target_hidden,
+                 noise_embedding=noise_embedding,
+@@ -266,6 +274,11 @@ def dflash_generate(
+                     draft_indices = None
+                 else:
+                     block_output_ids[:, 1:] = torch.argmax(draft_logits, dim=-1)
++            ####################################################################
++            if PROFILE: draft_times.append(_cuda_time() -t0)
++            ####################################################################
++        t1 = _cuda_time() if PROFILE else 0
++        #########################################################################
+         output = target(
+             block_output_ids,
+             position_ids=block_position_ids,
+@@ -273,7 +286,9 @@ def dflash_generate(
+             use_cache=True,
+             output_hidden_states=verify_size > 1,
+         )
+-
++        ###########################################################################
++        if PROFILE: verify_times.append(_cuda_time() -t1)
++        ###########################################################################
+         if temperature > 0:
+             target_probs = _sampling_probs(output.logits, temperature, top_p, top_k)
+             if verify_size > 1:
+@@ -303,6 +318,9 @@ def dflash_generate(
+         start += produced
+         _crop_to(past_key_values_target, start)
+         acceptance_lengths.append(produced)
++        ###############################################################
++        if PROFILE: round_records.append((acceptance_length, verify_size))
++        ###############################################################
+ 
+         if verify_size > 1:
+             target_hidden = extract_context_feature(output.hidden_states, model.target_layer_ids)[:, :produced, :]
+@@ -321,6 +339,9 @@ def dflash_generate(
+         time_to_first_token=time_to_first_token,
+         time_per_output_token=total_decode_time / num_output_tokens,
+         acceptance_lengths=acceptance_lengths,
++        draft_times=draft_times,          
++        verify_times=verify_times,        
++        round_records=round_records,
+     )
+ 
+ 

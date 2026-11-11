@@ -1,0 +1,14 @@
+max_delay/setup group asynchronous
+
+                                      Required    Actual
+Endpoint                                 Delay     Delay     Slack
+------------------------------------------------------------------
+_39841_/SET_B (sky130_fd_sc_hd__dfstp_2)  100.1280    0.0000  100.1280 (MET)
+
+max_delay/setup group core_clock
+
+                                      Required    Actual
+Endpoint                                 Delay     Delay     Slack
+------------------------------------------------------------------
+_40772_/D (sky130_fd_sc_hd__dfrtp_1)   99.8443   19.6117   80.2326 (MET)
+

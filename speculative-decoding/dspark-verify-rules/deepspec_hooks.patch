@@ -1,0 +1,80 @@
+diff --git a/deepspec/eval/base_evaluator.py b/deepspec/eval/base_evaluator.py
+index 5005052..d239f79 100644
+--- a/deepspec/eval/base_evaluator.py
++++ b/deepspec/eval/base_evaluator.py
+@@ -194,8 +194,16 @@ def verify_draft_tokens(
+     max_proposal_tokens: int,
+     current_token_ids: torch.Tensor | None = None,
+     stop_token_ids: list[int] | None = None,
++    accept_rule: Callable[[SimpleNamespace], torch.Tensor] | None = None,
+ ) -> VerificationResult:
+-    """Verify draft tokens with the target model and rejection sampling."""
++    """Verify draft tokens with the target model and rejection sampling.
++
++    `accept_rule`, when given, receives the per-position strict accept mask
++    plus the tensors needed to relax it and returns a new [1, K] 0/1 mask.
++    The prefix cumprod below is unchanged, so the rule can only flip 0 -> 1
++    on positions it wants to accept despite a mismatch. None = original
++    behaviour.
++    """
+     if proposal.draft_token_count > max_proposal_tokens:
+         raise ValueError(
+             "DraftProposal.draft_token_count must not exceed "
+@@ -254,6 +262,20 @@ def verify_draft_tokens(
+             max=1.0,
+         )
+         accept_mask = (torch.rand_like(accept_prob) < accept_prob).to(torch.int64)
++        if accept_rule is not None:
++            accept_mask = accept_rule(
++                SimpleNamespace(
++                    target_logits=target_output.logits[:, :-1, :],
++                    target_logits_all=target_output.logits,
++                    target_probs=target_probs[:, :-1, :],
++                    draft_tokens=proposed_tokens,
++                    draft_probs=proposal.draft_probs,
++                    draft_logits=getattr(proposal, "draft_logits", None),
++                    confidence_logits=getattr(proposal, "confidence_logits", None),
++                    strict_mask=accept_mask,
++                    start=start,
++                )
++            )
+         accept_prefix_mask = accept_mask.cumprod(dim=1)
+         accepted_draft_tokens = int(accept_prefix_mask.sum(dim=1)[0].item())
+     else:
+@@ -317,6 +339,7 @@ def generate_decoding_sample(
+     propose: Callable[..., DraftProposal],
+     update: Callable[[Any, VerificationResult], None],
+     post_verify: Callable[[DraftProposal, VerificationResult], None] | None = None,
++    accept_rule: Callable[[SimpleNamespace], torch.Tensor] | None = None,
+ ) -> SimpleNamespace:
+     """Speculative-decoding loop.
+ 
+@@ -400,6 +423,7 @@ def generate_decoding_sample(
+             max_proposal_tokens=max_proposal_tokens,
+             current_token_ids=output_ids[:, start : start + 1],
+             stop_token_ids=stop_token_ids,
++            accept_rule=accept_rule,
+         )
+         if post_verify is not None:
+             post_verify(proposal, verification)
+diff --git a/deepspec/eval/dspark/draft_ops.py b/deepspec/eval/dspark/draft_ops.py
+index 753a56d..9b9f998 100644
+--- a/deepspec/eval/dspark/draft_ops.py
++++ b/deepspec/eval/dspark/draft_ops.py
+@@ -17,6 +17,10 @@ DSparkModel = Qwen3DSparkModel | Gemma4DSparkModel
+ @dataclass
+ class DSparkDraftProposal(DraftProposal):
+     confidence_logits: torch.Tensor | None = None
++    # Raw draft logits (lm_head + Markov bias) for the proposed positions.
++    # `draft_probs` becomes one-hot at temperature 0, so p_D(x_k) is only
++    # recoverable from these. Diagnostic only; not used by verification.
++    draft_logits: torch.Tensor | None = None
+ 
+ 
+ def forward_dspark_draft_block(
+@@ -150,4 +154,5 @@ def build_dspark_proposal(
+             if confidence_logits is not None
+             else None
+         ),
++        draft_logits=draft_logits[:, :proposal_draft_tokens, :],
+     )

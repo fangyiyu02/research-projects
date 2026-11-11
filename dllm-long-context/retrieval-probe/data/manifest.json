@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "model_id": "GSAI-ML/LLaDA-8B-Instruct",
+  "tokenizer_snapshot_directory": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+  "tokenizer_json_sha256": "071eb20fe7bd601550b1b7838ff696d6c93b88f51257f753303d3df23163c381",
+  "tokenizer_config_sha256": "b9a6102c39a4f42f47f0d63fc6cee58a2381199d90f2a4f39b3f6871f32b4119",
+  "generator_sha256": "761eeceaa8434a36bbd97b84d442da685867fc49de051df90261f2385d4f6a25",
+  "tokenizers_version": "0.22.1",
+  "seed": 42,
+  "counts": {
+    "pilot": 10,
+    "eval": 90
+  },
+  "eval_depth_counts": {
+    "middle": 30,
+    "late": 30,
+    "early": 30
+  },
+  "eval_answer_counts": {
+    "5": 10,
+    "9": 10,
+    "2": 10,
+    "8": 10,
+    "6": 10,
+    "1": 10,
+    "7": 10,
+    "4": 10,
+    "3": 10
+  },
+  "max_input_tokens": 512,
+  "actual_input_tokens_min": 501,
+  "actual_input_tokens_max": 512,
+  "max_depth_error": 0.013646532438478798,
+  "digit_token_ids": {
+    "1": [
+      16
+    ],
+    "2": [
+      17
+    ],
+    "3": [
+      18
+    ],
+    "4": [
+      19
+    ],
+    "5": [
+      20
+    ],
+    "6": [
+      21
+    ],
+    "7": [
+      22
+    ],
+    "8": [
+      23
+    ],
+    "9": [
+      24
+    ]
+  },
+  "three_digit_example": {
+    "text": "278",
+    "token_ids": [
+      17,
+      22,
+      23
+    ]
+  },
+  "validation": "All 100 rows passed token alignment, answer uniqueness, mask, length, and balance checks.",
+  "inference_status": "Not run. No model accuracy or pruning effect has been measured.",
+  "coordinate_system": "Token positions are zero-based in input_ids, including chat template; char spans are [start, end) in prompt.",
+  "data_sha256": {
+    "pilot.jsonl": "b61e1130996c1062a0c6186e62a80e7883df0e18c9f57c8b5aeab36271530b4c",
+    "eval.jsonl": "5569ee4bd690d1d07931f0de6ba3f99fcaa448090e69230955b50446bd1e75e1"
+  }
+}

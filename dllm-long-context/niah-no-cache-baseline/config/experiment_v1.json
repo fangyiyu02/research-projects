@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "experiment_id": "llada8b_fresh_niah_v1",
+  "created_date": "2026-07-15",
+  "status": "ready_for_preparation",
+  "model": {
+    "id": "GSAI-ML/LLaDA-8B-Instruct",
+    "revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "code_revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "trust_remote_code": true,
+    "torch_dtype": "bfloat16",
+    "device": "cuda"
+  },
+  "tokenizer": {
+    "id": "GSAI-ML/LLaDA-8B-Instruct",
+    "revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "code_revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "trust_remote_code": true,
+    "use_fast": true
+  },
+  "generation": {
+    "gen_length": 64,
+    "block_length": 32,
+    "steps": 64,
+    "temperature": 0.0,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "mask_id": 126336,
+    "logits_eos_inf": false,
+    "confidence_eos_eot_inf": false
+  },
+  "fresh_haystack": {
+    "generator_version": 1,
+    "seed": 2026071501,
+    "sentence_count": 30000,
+    "relative_path": "data/haystack_v1.txt",
+    "metadata_relative_path": "data/haystack_v1.meta.json"
+  },
+  "grid": {
+    "target_total_lengths": [512, 1024, 1536, 2048, 2560, 3072, 3584, 4096, 4608, 5120, 5632, 6144, 6656, 7168, 7680, 8192],
+    "depths": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+    "n_samples_per_cell": 10,
+    "master_prompt_seed": 2026071502,
+    "run_order_seed": 2026071503,
+    "safety_margin_tokens": 8,
+    "maximum_length_shortfall_tokens": 24
+  },
+  "artifacts": {
+    "prompt_manifest_relative_path": "prompts/prompts_v1.jsonl",
+    "prompt_metadata_relative_path": "prompts/prompts_v1.meta.json",
+    "experiment_lock_relative_path": "locks/experiment_v1.lock.json"
+  },
+  "runtime": {
+    "seed": 2026071504,
+    "batch_size": 1,
+    "warmup_repetitions": 1,
+    "cuda_synchronize_timing": true,
+    "record_peak_memory": true,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "allow_tf32": false,
+    "deterministic_algorithms": false
+  },
+  "design": {
+    "experimental_unit": "one immutable prompt/input_ids record",
+    "blocking": "the same sample_id is evaluated under no_cache and dllm_cache",
+    "run_order": "one seeded shuffled manifest order reused by both conditions",
+    "primary_quality_metric": "contains_expected_number",
+    "secondary_quality_metrics": ["number_only_exact", "digit_overlap"],
+    "efficiency_metrics": ["latency_seconds", "generated_tokens_per_second", "peak_memory_allocated_bytes", "peak_memory_reserved_bytes"]
+  }
+}
+
